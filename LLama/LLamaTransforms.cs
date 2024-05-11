@@ -1,4 +1,4 @@
-﻿using LLama.Abstractions;
+using LLama.Abstractions;
 using LLama.Common;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,17 +24,11 @@ namespace LLama
             private const string defaultSystemName = "System";
             private const string defaultUnknownName = "??";
 
-            private readonly string _userName;
-            private readonly string _assistantName;
-            private readonly string _systemName;
-            private readonly string _unknownName;
-            private readonly bool _isInstructMode;
-
-            public string UserName => _userName;
-            public string AssistantName => _assistantName;
-            public string SystemName => _systemName;
-            public string UnknownName => _unknownName;
-            public bool IsInstructMode => _isInstructMode;
+            public string UserName { get; }
+            public string AssistantName { get; }
+            public string SystemName { get; }
+            public string UnknownName { get; }
+            public bool IsInstructMode { get; }
 
             /// <summary>
             /// 
@@ -47,17 +41,17 @@ namespace LLama
             public DefaultHistoryTransform(string? userName = null, string? assistantName = null, 
                 string? systemName = null, string? unknownName = null, bool isInstructMode = false)
             {
-                _userName = userName ?? defaultUserName;
-                _assistantName = assistantName ?? defaultAssistantName;
-                _systemName = systemName ?? defaultSystemName;
-                _unknownName = unknownName ?? defaultUnknownName;
-                _isInstructMode = isInstructMode;
+                UserName = userName ?? defaultUserName;
+                AssistantName = assistantName ?? defaultAssistantName;
+                SystemName = systemName ?? defaultSystemName;
+                UnknownName = unknownName ?? defaultUnknownName;
+                IsInstructMode = isInstructMode;
             }
 
             /// <inheritdoc />
             public IHistoryTransform Clone()
             {
-                return new DefaultHistoryTransform(_userName, _assistantName, _systemName, _unknownName, _isInstructMode);
+                return new DefaultHistoryTransform(UserName, AssistantName, SystemName, UnknownName, IsInstructMode);
             }
 
             /// <inheritdoc />
@@ -68,19 +62,19 @@ namespace LLama
                 {
                     if (message.AuthorRole == AuthorRole.User)
                     {
-                        sb.AppendLine($"{_userName}: {message.Content}");
+                        sb.AppendLine($"{UserName}: {message.Content}");
                     }
                     else if (message.AuthorRole == AuthorRole.System)
                     {
-                        sb.AppendLine($"{_systemName}: {message.Content}");
+                        sb.AppendLine($"{SystemName}: {message.Content}");
                     }
                     else if (message.AuthorRole == AuthorRole.Unknown)
                     {
-                        sb.AppendLine($"{_unknownName}: {message.Content}");
+                        sb.AppendLine($"{UnknownName}: {message.Content}");
                     }
                     else if (message.AuthorRole == AuthorRole.Assistant)
                     {
-                        sb.AppendLine($"{_assistantName}: {message.Content}");
+                        sb.AppendLine($"{AssistantName}: {message.Content}");
                     }
                 }
                 return sb.ToString();
@@ -102,15 +96,15 @@ namespace LLama
             /// <returns></returns>
             public virtual string TrimNamesFromText(string text, AuthorRole role)
             {
-                if (role == AuthorRole.User && text.StartsWith($"{_userName}:"))
+                if (role == AuthorRole.User && text.StartsWith($"{UserName}:"))
                 {
-                    text = text.Substring($"{_userName}:".Length).TrimStart();
+                    text = text.Substring($"{UserName}:".Length).TrimStart();
                 }
-                else if (role == AuthorRole.Assistant && text.EndsWith($"{_assistantName}:"))
+                else if (role == AuthorRole.Assistant && text.EndsWith($"{AssistantName}:"))
                 {
-                    text = text.Substring(0, text.Length - $"{_assistantName}:".Length).TrimEnd();
+                    text = text.Substring(0, text.Length - $"{AssistantName}:".Length).TrimEnd();
                 }
-                if (_isInstructMode && role == AuthorRole.Assistant && text.EndsWith("\n> "))
+                if (IsInstructMode && role == AuthorRole.Assistant && text.EndsWith("\n> "))
                 {
                     text = text.Substring(0, text.Length - "\n> ".Length).TrimEnd();
                 }
@@ -161,23 +155,19 @@ namespace LLama
         /// </summary>
         public class KeywordTextOutputStreamTransform : ITextStreamTransform
         {
-            private readonly HashSet<string> _keywords;
-            private readonly int _maxKeywordLength;
-            private readonly bool _removeAllMatchedTokens;
-
             /// <summary>
             /// Keywords that you want to remove from the response.
             /// This property is used for JSON serialization.
             /// </summary>
             [JsonPropertyName("keywords")]
-            public HashSet<string> Keywords => _keywords;
+            public HashSet<string> Keywords { get; }
 
             /// <summary>
             /// Maximum length of the keywords.
             /// This property is used for JSON serialization.
             /// </summary>
             [JsonPropertyName("maxKeywordLength")]
-            public int MaxKeywordLength => _maxKeywordLength;
+            public int MaxKeywordLength { get; }
 
             /// <summary>
             /// If set to true, when getting a matched keyword, all the related tokens will be removed. 
@@ -185,7 +175,7 @@ namespace LLama
             /// This property is used for JSON serialization.
             /// </summary>
             [JsonPropertyName("removeAllMatchedTokens")]
-            public bool RemoveAllMatchedTokens => _removeAllMatchedTokens;
+            public bool RemoveAllMatchedTokens { get; }
 
             /// <summary>
             /// JSON constructor.
@@ -196,9 +186,9 @@ namespace LLama
                 int maxKeywordLength,
                 bool removeAllMatchedTokens)
             {
-                _keywords = new(keywords);
-                _maxKeywordLength = maxKeywordLength;
-                _removeAllMatchedTokens = removeAllMatchedTokens;
+                Keywords = new(keywords);
+                MaxKeywordLength = maxKeywordLength;
+                RemoveAllMatchedTokens = removeAllMatchedTokens;
             }
 
             /// <summary>
@@ -212,16 +202,16 @@ namespace LLama
             /// <param name="removeAllMatchedTokens">If set to true, when getting a matched keyword, all the related tokens will be removed. Otherwise only the part of keyword will be removed.</param>
             public KeywordTextOutputStreamTransform(IEnumerable<string> keywords, int redundancyLength = 3, bool removeAllMatchedTokens = false)
             {
-                _keywords = new(keywords);
-                _maxKeywordLength = _keywords.Max(x => x.Length) + redundancyLength;
-                _maxKeywordLength = _keywords.Select(x => x.Length).Max() + redundancyLength;
-                _removeAllMatchedTokens = removeAllMatchedTokens;
+                Keywords = new(keywords);
+                MaxKeywordLength = Keywords.Max(x => x.Length) + redundancyLength;
+                MaxKeywordLength = Keywords.Select(x => x.Length).Max() + redundancyLength;
+                RemoveAllMatchedTokens = removeAllMatchedTokens;
             }
 
             /// <inheritdoc />
             public ITextStreamTransform Clone()
             {
-                return new KeywordTextOutputStreamTransform(_keywords, _maxKeywordLength, _removeAllMatchedTokens);
+                return new KeywordTextOutputStreamTransform(Keywords, MaxKeywordLength, RemoveAllMatchedTokens);
             }
 
             /// <inheritdoc />
@@ -233,15 +223,15 @@ namespace LLama
                 {
                     window.Enqueue(s);
                     var current = string.Join("", window);
-                    if (_keywords.Any(x => current.Contains(x)))
+                    if (Keywords.Any(x => current.Contains(x)))
                     {
-                        var matchedKeywords = _keywords.Where(x => current.Contains(x));
+                        var matchedKeywords = Keywords.Where(x => current.Contains(x));
                         int total = window.Count;
                         for (int i = 0; i < total; i++)
                         {
                             window.Dequeue();
                         }
-                        if (!_removeAllMatchedTokens)
+                        if (!RemoveAllMatchedTokens)
                         {
                             foreach(var keyword in matchedKeywords)
                             {
@@ -250,7 +240,7 @@ namespace LLama
                             yield return current;
                         }
                     }
-                    if (current.Length >= _maxKeywordLength)
+                    if (current.Length >= MaxKeywordLength)
                     {
                         int total = window.Count;
                         for (int i = 0; i < total; i++)
