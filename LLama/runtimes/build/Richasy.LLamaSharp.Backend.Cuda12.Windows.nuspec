@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Richasy.LLamaSharp.Backend.Cuda12.Windows</id>
+    <version>0.999.0</version>
+    <title>LLamaSharp.Backend.Cuda12, the backend for LLamaSharp</title>
+    <authors>llama.cpp Authors</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <icon>icon512.png</icon>
+    <projectUrl>https://github.com/SciSharp/LLamaSharp</projectUrl>
+    <description>LLamaSharp.Backend.Cuda12 is a backend for LLamaSharp to use with Cuda12.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2023 The llama.cpp Authors. All rights reserved.</copyright>
+    <tags>LLamaSharp LLama LLM GPT AI ChatBot SciSharp</tags>
+  </metadata>
+
+  <files>
+    <file src="LLamaSharpBackend.props" target="build/netstandard2.0/LLamaSharp.Backend.Cuda12.props" />
+    <file src="../deps/cu12.1.0/llava_shared.dll" target="runtimes\win-x64\native\cuda12\llava_shared.dll" />
+    <file src="../deps/cu12.1.0/llama.dll" target="runtimes\win-x64\native\cuda12\llama.dll" />
+    <file src="icon512.png" target="icon512.png" />
+  </files>
+</package>

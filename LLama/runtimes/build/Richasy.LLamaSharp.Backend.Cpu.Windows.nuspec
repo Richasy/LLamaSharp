@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>Richasy.LLamaSharp.Backend.Cpu.Windows</id>
+    <version>0.999.0</version>
+    <title>LLamaSharp.Backend.Cpu, the backend for LLamaSharp</title>
+    <authors>llama.cpp Authors</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <icon>icon512.png</icon>
+    <projectUrl>https://github.com/SciSharp/LLamaSharp</projectUrl>
+    <description>LLamaSharp.Backend.Cpu is a backend for LLamaSharp to use with Cpu only.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2024 The llama.cpp Authors. All rights reserved.</copyright>
+    <tags>LLamaSharp LLama LLM GPT AI ChatBot SciSharp</tags>
+  </metadata>
+
+  <files>
+    <file src="LLamaSharpBackend.props" target="build/netstandard2.0/LLamaSharp.Backend.Cpu.props" />
+
+    <file src="../deps/llama.dll" target="runtimes\win-x64\native\llama.dll" />
+    <file src="../deps/avx/llama.dll" target="runtimes\win-x64\native\avx\llama.dll" />
+    <file src="../deps/avx2/llama.dll" target="runtimes\win-x64\native\avx2\llama.dll" />
+    <file src="../deps/avx512/llama.dll" target="runtimes\win-x64\native\avx512\llama.dll" />
+
+    <file src="../deps/llava_shared.dll" target="runtimes\win-x64\native\llava_shared.dll" />
+    <file src="../deps/avx/llava_shared.dll" target="runtimes\win-x64\native\avx\llava_shared.dll" />
+    <file src="../deps/avx2/llava_shared.dll" target="runtimes\win-x64\native\avx2\llava_shared.dll" />
+    <file src="../deps/avx512/llava_shared.dll" target="runtimes\win-x64\native\avx512\llava_shared.dll" />
+    
+    <file src="icon512.png" target="icon512.png" />
+  </files>
+</package>
