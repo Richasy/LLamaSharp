@@ -365,7 +365,7 @@ namespace LLama.Native
     /// </summary>
     public sealed class NativeLibraryConfigContainer
     {
-        private NativeLibraryConfig[] _configs;
+        private readonly NativeLibraryConfig[] _configs;
 
         internal NativeLibraryConfigContainer(params NativeLibraryConfig[] configs)
         {
